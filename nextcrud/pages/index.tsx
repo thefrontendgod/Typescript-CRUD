@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react'
 const Home: NextPage = () => {
   const [data, setData] = useState([]);
   const [inputedData, setInputedData] = useState({
+    id: "",
     title: "",
     content: ""
   });
@@ -34,7 +35,7 @@ const Home: NextPage = () => {
         content: inputedData.content,
       }),
     })
-    const json = await response.json()
+    // const json = await response.json()
   }
 
   const handleDeleteData = async(id: string) => {
@@ -50,6 +51,11 @@ const Home: NextPage = () => {
     const json = await response.json()
     console.log(json)
     fetchData()
+  }
+
+  const handleEditData = async(id: string, title: string, content: string) => {
+    console.log(id, title, content)
+    setInputedData({id, title, content})
   }
 
   // after fetching data, to use the data we use the useEffect
@@ -69,11 +75,13 @@ const Home: NextPage = () => {
       <div>
         <form onSubmit={handleCreateData}>
           <input
+            value={inputedData.title || ""}
             type="text"
             placeholder="Title"
             onChange={(e) => setInputedData({ ...inputedData, title: e.target.value})}
           />
           <input
+            value={inputedData.content || ""}
             type="text"
             placeholder="Content"
             onChange={(e) => setInputedData({ ...inputedData, content: e.target.value})}
@@ -88,6 +96,7 @@ const Home: NextPage = () => {
               <h3>Title: {title}</h3>
               <p>Content: {content}</p>
               <button onClick={() => handleDeleteData(id)}>Delete Data</button>
+              <button onClick={() => handleEditData(id, title, content)}>Edit Data</button>
             </div>
           )
         })}
