@@ -20,6 +20,6 @@ export default async function handler(
         id,
       }
     })
-    res.status(200).json(post)
+    // res.status(200).json(post)
   }
 }

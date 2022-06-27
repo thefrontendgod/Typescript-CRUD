@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 
 const Home: NextPage = () => {
   const [data, setData] = useState([]);
+  const [editMode, setEditMode] = useState(false);
   const [inputedData, setInputedData] = useState({
     id: "",
     title: "",
@@ -25,17 +26,22 @@ const Home: NextPage = () => {
   // to submit the form
   const handleCreateData = async (e: React.FormEvent) => {
     e.preventDefault()
-    const response = await fetch(`/api/post/createdata`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: inputedData.title,
-        content: inputedData.content,
-      }),
-    })
-    // const json = await response.json()
+    if(editMode){
+      handleUpdateData()
+    }else{
+      const response = await fetch(`/api/post/createdata`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: inputedData.title,
+          content: inputedData.content,
+        }),
+      })
+      // const json = await response.json()
+      setInputedData({id: "", title: "", content: ""})
+    }
   }
 
   const handleDeleteData = async(id: string) => {
@@ -56,6 +62,25 @@ const Home: NextPage = () => {
   const handleEditData = async(id: string, title: string, content: string) => {
     console.log(id, title, content)
     setInputedData({id, title, content})
+    setEditMode(true)
+  }
+
+  const handleUpdateData = async() => {
+    const response = await fetch(`/api/post/updatedata`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: inputedData.id,
+        title: inputedData.title,
+        content: inputedData.content,
+      }),
+    })
+    const json = await response.json()
+    console.log(json)
+    setInputedData({id: "", title: "", content: ""})
+    setEditMode(false)
   }
 
   // after fetching data, to use the data we use the useEffect

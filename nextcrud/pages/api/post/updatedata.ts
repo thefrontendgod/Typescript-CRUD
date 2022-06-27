@@ -12,14 +12,17 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const post = await prisma.post.update({
-    where: {
-      id: "cl4vzisc50019h3jq94cn9t2z"
-    },
-    data: {
-      title: "The new title",
-      content: "The plenty content that is updated to"
-    }
-  })
-  res.status(200).json(post)
+  if(req.method === "POST"){
+    const { id, title, content } = req.body;
+    const post = await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        content,
+      }
+    })
+    // res.status(200).json(post)
+  }
 }
