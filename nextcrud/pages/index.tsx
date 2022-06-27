@@ -1,7 +1,24 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useState, useEffect } from 'react'
 
 const Home: NextPage = () => {
+  const [data, setData] = useState([]);
+  const fetchData = async () => {
+    const response = await fetch(`/api/post/getdata`);
+    const json = await response.json();
+    // check the output to be suer it came out
+    // console.log(json);
+    // set for use
+    setData(json);
+  }
+
+  // after fetching data, to use the data we use the useEffect
+  useEffect(() => {
+    // we invoke the fetchdata const from the above
+    fetchData()
+  })
+
   return (
     <div>
       <Head>
@@ -10,6 +27,16 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1>NEXT CRUD!</h1>
+      <div>
+        {data.map(({id, title, content}) => {
+          return(
+            <div key={id}>
+              <h3>Title: {title}</h3>
+              <p>Content: {content}</p>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
