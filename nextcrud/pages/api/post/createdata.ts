@@ -12,11 +12,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const post = await prisma.post.create({
-    data: {
-      title: "hello world",
-      content: "This is my first post!",
-    }
-  })
-  res.status(200).json(post)
+  if(req.method === "POST"){
+    // destructure title, content
+    const { title, content } = req.body;
+    const post = await prisma.post.create({
+      data: {
+        title,
+        content,
+      }
+    })
+  }
+  res.status(200).json()
 }

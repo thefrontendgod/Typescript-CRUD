@@ -12,10 +12,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const post = await prisma.post.delete({
-    where: {
-      id: "cl4vyx1vx0000h3jq7pxkn8iu"
-    }
-  })
-  res.status(200).json(post)
+  if(req.method === "POST"){
+    // destructure the id
+    const {id} = req.body
+    const post = await prisma.post.delete({
+      where: {
+        id,
+      }
+    })
+    res.status(200).json(post)
+  }
 }
